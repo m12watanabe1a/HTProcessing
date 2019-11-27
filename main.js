@@ -1,14 +1,45 @@
+const circle_r = 16;
+const circle_distance = circle_r * 1.8;
 const windowWidth = 640;
-const windowHeight = 480;
+var windowHeight = 0;
+
 function setup()
 {
-    createCanvas(windowWidth, windowHeight);
+    frameRate(12);
+    colorMode(HSB, 360, 100, 100)
     init_field();
+    windowHeight = (field.length + 2) * circle_distance;
+    createCanvas(windowWidth, windowHeight);
 }
 
 function draw()
 {
-    background(0);
+    background(0,0,100);
+    draw_heatmap();
+    calc_field();
+}
+
+function draw_heatmap()
+{
+    noStroke();
+
+    for(var i = 0; i < field.length; i++){
+        fill(heat_color(field[i]));
+        for(var j = circle_distance; j < windowWidth - circle_distance; j += circle_distance){
+            let x_rand = random(-1, 1);
+            let y_rand = random(-1, 1);
+            ellipse(j + x_rand, circle_distance * (i + 1) + y_rand, circle_r, circle_r);
+        }
+    }
+}
+
+function heat_color(val){
+    // 0: red
+    // 240: blue
+    const min_color = 240;
+    let hue = - min_color / T_diff * (val - T_x0) + min_color;
+    return color(hue, 100, 100)
+
 }
 
 
@@ -29,6 +60,10 @@ const T_x0 = 293.0;
 // Boundary Condition
 const T_0t = 373.0;
 const T_lt = 373.0;
+
+// Maximum Temperature Difference
+const T_max = Math.max(T_0t, T_lt);
+const T_diff = T_max - T_x0;
 
 
 var field = [];
