@@ -24,8 +24,8 @@ function draw_heatmap()
     noStroke();
 
     for(var i = 0; i < field.length; i++){
-        fill(heat_color(field[i]));
         for(var j = circle_distance; j < windowWidth - circle_distance; j += circle_distance){
+            fill(heat_color(field[i]));
             let x_rand = random(-1, 1);
             let y_rand = random(-1, 1);
             ellipse(j + x_rand, circle_distance * (i + 1) + y_rand, circle_r, circle_r);
@@ -37,8 +37,11 @@ function heat_color(val){
     // 0: red
     // 240: blue
     const min_color = 240;
+    let h_rand = random(-3, 3);
+    let s_rand = random(-10, 0);
+    let b_rand = random(-10, 0);
     let hue = - min_color / T_diff * (val - T_x0) + min_color;
-    return color(hue, 100, 100)
+    return color(constrain(hue + h_rand, 0, min_color), 100 + s_rand, 100 + b_rand);
 
 }
 
